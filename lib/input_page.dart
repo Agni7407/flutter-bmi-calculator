@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'icon_content.dart';
 import 'reusable_card.dart';
 import 'constants.dart';
+import 'result_page.dart';
+import 'calculator_brain.dart';
 
 enum Gender { male, female, NULL }
 
@@ -17,7 +19,8 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   Gender selectedGender = Gender.NULL;
   int height = 180;
-
+  int weight = 30;
+  int age = 19;
   // Color maleCardColour = inactiveCardColour;
   // Color femaleCardColour = inactiveCardColour;
 
@@ -127,48 +130,136 @@ class _InputPageState extends State<InputPage> {
             child: Row(children: [
               Expanded(
                 child: ReusableCont(
-                  onPress: () {
-                    setState(() {
-                      selectedGender = Gender.male;
-                    });
-                  },
                   Colour: boxColour,
-                  cardChild: Column(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.mars,
-                        size: 80,
-                      ),
-                      SizedBox(height: 15),
-                      Text(
-                        'MALE',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF8D8E98)),
-                      )
-                    ],
+                  cardChild: Expanded(
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Weight',
+                          style: lableTextStyle,
+                        ),
+                        Text(
+                          weight.toString(),
+                          style: kNumberTextStyle,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RoundIconButton(
+                                icon: FontAwesomeIcons.plus,
+                                Onpressed: () {
+                                  setState(() {
+                                    weight++;
+                                  });
+                                }),
+                            SizedBox(width: 10),
+                            RoundIconButton(
+                              icon: FontAwesomeIcons.minus,
+                              Onpressed: () => setState(() {
+                                weight--;
+                              }),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
               Expanded(
                 child: ReusableCont(
-                    onPress: () {
-                      setState(() {
-                        selectedGender = Gender.male;
-                      });
-                    },
-                    Colour: boxColour,
-                    cardChild: iconContent(
-                        icon: FontAwesomeIcons.venus, lable: 'FEMALE')),
+                  Colour: boxColour,
+                  cardChild: Expanded(
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Age',
+                          style: lableTextStyle,
+                        ),
+                        Text(
+                          age.toString(),
+                          style: kNumberTextStyle,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RoundIconButton(
+                                icon: FontAwesomeIcons.plus,
+                                Onpressed: () {
+                                  setState(() {
+                                    age++;
+                                  });
+                                }),
+                            SizedBox(width: 10),
+                            RoundIconButton(
+                              icon: FontAwesomeIcons.minus,
+                              Onpressed: () => setState(() {
+                                age--;
+                              }),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ]),
           ),
-          Container(
-            color: bottomContainerColor,
-            width: double.infinity,
-            height: bottomContainerHeight,
+          GestureDetector(
+            onTap: () {
+              CalculatorBrain cal =
+                  CalculatorBrain(height: height, weight: weight);
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ResultPage(
+                            bmical: cal.calculateBMI(),
+                            result: cal.getResult(),
+                            interpretation: cal.Interpretation(),
+                          )));
+            },
+            child: Container(
+              child: Center(
+                child: Text(
+                  'CALCULATE',
+                  style: KLargeTextStyle,
+                ),
+              ),
+              color: bottomContainerColor,
+              width: double.infinity,
+              height: bottomContainerHeight,
+            ),
           )
         ]));
+  }
+}
+
+class RoundIconButton extends StatelessWidget {
+  RoundIconButton({this.icon, required this.Onpressed});
+
+  final IconData? icon;
+  final Function() Onpressed;
+  @override
+  Widget build(BuildContext context) {
+    return (RawMaterialButton(
+      onPressed: Onpressed,
+      child: Icon(icon),
+      constraints: BoxConstraints.tightFor(width: 56, height: 56),
+      shape: CircleBorder(),
+      fillColor: const Color.fromARGB(255, 63, 63, 63),
+      elevation: 6.0,
+    ));
   }
 }

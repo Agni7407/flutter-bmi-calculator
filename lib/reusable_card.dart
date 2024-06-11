@@ -5,7 +5,7 @@ class ReusableCont extends StatelessWidget {
   ReusableCont({required this.Colour, this.cardChild, this.onPress});
   final Color Colour;
   Widget? cardChild;
-  VoidCallback? onPress;
+  late Function()? onPress;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
